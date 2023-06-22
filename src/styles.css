@@ -2,15 +2,9 @@ body {
 margin: 0;
 }
 
-/* img {
-    object-fit: cover;
-    display: block;
-    width: 100%;
-height: 100%;
-} */
-
 .search-form{
     position: fixed;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -56,17 +50,25 @@ box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -
     padding-top: 80px;
     display: flex;
     flex-wrap: wrap;
+    /* flex-direction: column; */
     justify-content: space-around;
 }
 
 .photo-card{
-    /* width: 470px; */
+    width: calc(100% / 3);
 }
 
-/* .info{
-    height: 30px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    justify-content: space-around;
-} */
+img {
+    object-fit: cover;
+    display: block;
+    width: 100%;
+height: 100%;
+
+transition: transform 200ms ease-in-out;;
+}
+
+a:hover img,
+a:focus img{
+    border-radius: 10px;
+   transform: scale(1.15);
+}
