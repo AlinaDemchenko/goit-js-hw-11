@@ -22,12 +22,13 @@ const refs = {
   button: document.querySelector('.button'),
   guard: document.querySelector('.guard'),
 };
-let page = 1;
+let page;
 let lightbox;
+let totalHits;
 
 refs.button.setAttribute('disabled', true);
 refs.form.addEventListener('input', evt => {
-  if (evt.currentTarget.searchQuery.value.length > 0) {
+  if (evt.currentTarget.searchQuery.value.length) {
     refs.button.removeAttribute('disabled');
   } else {
     refs.button.setAttribute('disabled', true);
@@ -41,11 +42,12 @@ async function handlerSubmit(evt) {
 page = 1;
   try {
     const picsData = await getPictures(q, page);
-    if (picsData.data.hits.length === 0) {
+    if (!picsData.data.hits.length) {
       throw new Error();
     }
     refs.gallery.innerHTML = renderPics(picsData);
-    observer.observe(refs.guard);
+    observer.observe(refs.guard)
+    totalHits = picsData.data.totalHits;
  lightbox = new SimpleLightbox('.gallery a', {
       captionsData: 'data-info',
       captionDelay: 250,
@@ -89,19 +91,12 @@ const options = {
   entries.forEach(async (entry) => {
       if (entry.isIntersecting) {
         page += 1;
-          const picsData = await getPictures(q, page);
-          if (picsData.data.hits.length === 0) {
+          if (page >= Math.ceil(totalHits / 40)) {
             observer.unobserve(refs.guard);
           }
+          const picsData = await getPictures(q, page);
           refs.gallery.insertAdjacentHTML("beforeend", renderPics(picsData))
           lightbox.refresh()
-          const { height: cardHeight } = document
-            .querySelector('.gallery')
-            .firstElementChild.getBoundingClientRect();
-          window.scrollBy({
-            top: cardHeight * 2,
-            behavior: 'smooth',
-          });
         } 
       })}
 
